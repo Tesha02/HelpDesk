@@ -11,6 +11,7 @@ function register($username,$email, $password,$confirmPassword)  {
         'confirmPassword'=>$confirmPassword
     ];
     $errors=validateRegister($data);
+    
     if(!empty($errors)) {
         return $errors;
     }
