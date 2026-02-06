@@ -1,4 +1,5 @@
 <?php 
+session_start();
 require_once "validators.php";
 require_once "repositories/UserRepository.php";
 
@@ -53,6 +54,32 @@ function login($email, $password) {
     $_SESSION['role']=$user['role'] ?? 'user';
 
     return [];
+}
+
+function logout() {
+    session_unset();
+    session_destroy();
+    redirect("index.php");
+}
+
+function currentUser() {
+    $id=$_SESSION['user_id'];
+    $userRepo=new UserRepository();
+    $user=$userRepo->findById($id);
+    return $user;
+}
+
+function isLoggedIn(): bool {
+    if(isset($_SESSION['user_id']))
+        return true;
+    return false;           
+}
+
+function isAdmin() {
+    $role=$_SESSION['role'] ?? '';
+    if($role==='admin') 
+        return true;
+    return false;
 }
 
 
