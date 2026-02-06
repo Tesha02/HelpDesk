@@ -13,6 +13,7 @@ try {
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         ]
     );
+    return $pdo;
 } catch (PDOException $err) {
 
     die("Greska prilikom povezivanja baze: " . $err->getMessage());
