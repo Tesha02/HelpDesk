@@ -29,6 +29,24 @@ class TicketRepository
             return 0;
         return $this->pdo->lastInsertId();
     }
+
+    public function AllTickets() {
+        $sql="SELECT * FROM tickets";
+        $stmt=$this->pdo->prepare($sql);
+        $stmt->execute();
+
+        $tickets=$stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $tickets;
+    }
+
+    public function findById(int $id) {
+        $sql = "SELECT * FROM tickets WHERE tickets.id= :id LIMIT 1";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['id' => $id]);
+
+        $ticket = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $ticket ?? null;
+    }
 }
 
 

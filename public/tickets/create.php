@@ -25,10 +25,8 @@ if (isPost()) {
 
     $file = $_FILES['attachment'] ?? null;
 
-    // 1) Validacija (bez uploadovanja)
     $errors = validateTicketCreate($data, $file);
 
-    // 2) Ako nema grešaka, opcionalno snimi fajl
     $attachmentPath = ''; // ovo ide u bazu (relativno)
     if (empty($errors) && $file && ($file['tmp_name'] ?? '') !== '') {
         $uploadDirDisk = __DIR__ . '/../uploads/'; // public/uploads/
@@ -44,7 +42,6 @@ if (isPost()) {
         }
     }
 
-    // 3) Ako i dalje nema grešaka, upiši ticket
     if (empty($errors)) {
         $ticketRepo = new TicketRepository();
 
@@ -68,7 +65,6 @@ if (isPost()) {
         }
     }
 
-    // 4) Ako ima grešaka, zapamti old (da forma ostane popunjena)
     if (!empty($errors)) {
         $_SESSION['old'] = [
             'title' => $title,
@@ -90,6 +86,7 @@ if (isPost()) {
 <body>
 
     <h1>Create Ticket</h1>
+    <p><a href="../dashboard.php">Nazad</a></p>
 
     <?php if (!empty($errors)): ?>
         <?php foreach ($errors as $e): ?>
