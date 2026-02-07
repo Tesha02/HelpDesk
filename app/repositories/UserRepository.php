@@ -1,5 +1,5 @@
 <?php
-require_once "../app/db.php";
+require_once __DIR__ . "/../db.php";
 
 class UserRepository
 {

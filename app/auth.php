@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once "../app/helpers.php";
+require_once "helpers.php";
 require_once "validators.php";
 require_once "repositories/UserRepository.php";
 
