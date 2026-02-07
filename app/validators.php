@@ -28,4 +28,45 @@ function validateLogin(array $data): array {
     return $errors;
 }
 
+function validateTicketCreate(array $data, array $file=null): array{
+    $errors = [];
+
+    if (!isset($data['title']) || strlen(trim($data['title'])) < 3) {
+        $errors[] = 'Naslov mora imati najmanje 3 karaktera.';
+    }
+
+    if (!isset($data['description']) || strlen(trim($data['description'])) < 10) {
+        $errors[] = 'Opis mora imati najmanje 10 karaktera.';
+    }
+
+    $allowedCategory=['billing','technical','other'];
+    if(!isset($data['category']) || !in_array($data['category'],$allowedCategory,true)) 
+        $errors[]='Nevalidna kategorija';
+
+    $allowedPriorities=['low','medium','high'];
+    if(!isset($data['priority']) || !in_array($data['priority'],$allowedPriorities,true)) 
+        $errors[]='Nevalidan prioritet';
+
+    if($file && isset($file['tmp_name']) && $file['tmp_name']!=="") {
+        if($file['error']!==UPLOAD_ERR_OK)
+            $errors[]="Fajl nije uploadovan";
+        else {
+            $maxBytes=5*1024*1024;
+            if($file['size']>$maxBytes)
+                $errors[]="Fajl je prevelik";
+            else {
+                $allowedExt=["jpg", "jpeg", "png", "pdf"];
+                $ext=strtolower(pathinfo($file['name'],PATHINFO_EXTENSION));
+                if(!in_array($ext,$allowedExt,true))
+                    $errors[]='Dozvoljeni fajlovi su tipa: jpg, jpeg, png, pdf';
+            }
+        }
+    }
+    return $errors;
+}
+
+function validateTicketUpdate(array $data): array {
+
+}
+
 ?>
