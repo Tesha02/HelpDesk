@@ -30,22 +30,53 @@ class TicketRepository
         return $this->pdo->lastInsertId();
     }
 
-    public function AllTickets() {
-        $sql="SELECT * FROM tickets";
-        $stmt=$this->pdo->prepare($sql);
+    public function AllTickets()
+    {
+        $sql = "SELECT * FROM tickets";
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
 
-        $tickets=$stmt->fetchAll(PDO::FETCH_ASSOC);
+        $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $tickets;
     }
 
-    public function findById(int $id) {
+    public function findById(int $id)
+    {
         $sql = "SELECT * FROM tickets WHERE tickets.id= :id LIMIT 1";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['id' => $id]);
 
         $ticket = $stmt->fetch(PDO::FETCH_ASSOC);
         return $ticket ?? null;
+    }
+
+    public function getByUser(int $user_id, string $order, string $direction = 'DESC')
+    {
+        if ($order === 'created_at') {
+            $sql = "
+            SELECT * FROM tickets
+            WHERE user_id = :user_id
+            ORDER BY created_at DESC
+            ";
+        } else {
+            $sql = "SELECT * FROM tickets
+            WHERE user_id = :user_id
+            ORDER BY
+                CASE status
+                    WHEN 'open' THEN 1
+                    WHEN 'closed' THEN 2
+                END,
+                CASE priority
+                    WHEN 'high' THEN 1
+                    WHEN 'medium' THEN 2
+                    WHEN 'low' THEN 3
+                END";
+        }
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['user_id' => $user_id]);
+
+        $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $tickets;
     }
 }
 

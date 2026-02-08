@@ -1,10 +1,17 @@
 <?php
+require_once __DIR__ . '/../../app/auth.php';
 require_once __DIR__ . '/../../app/repositories/TicketRepository.php';
 require_once __DIR__ . '/../../app/repositories/UserRepository.php';
 require_once __DIR__ . '/../../app/helpers.php';
 
 $ticketRepo = new TicketRepository();
-$tickets = $ticketRepo->AllTickets();
+$tickets = [];
+
+$order = $_GET['sort'] ?? 'created_at';
+var_dump($order);
+$tickets = $ticketRepo->getByUser(currentUser()['id'], $order);
+
+
 ?>
 
 <!doctype html>
@@ -18,7 +25,10 @@ $tickets = $ticketRepo->AllTickets();
 <body>
     <h1>List Tickets</h1>
     <p><a href="../dashboard.php">Nazad</a></p>
-
+    <p><a href="?sort=priority">Sortiraj po prioritetu</a>
+        || <a href="?sort=status">Sortiraj po statusu</a>
+        || <a href="list.php">Sortiraj po datumu</a>
+    </p>
     <table>
         <tr>
             <th>Korisnik</th>
