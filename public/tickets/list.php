@@ -8,8 +8,7 @@ $ticketRepo = new TicketRepository();
 $tickets = [];
 
 $order = $_GET['sort'] ?? 'created_at';
-var_dump($order);
-$tickets = $ticketRepo->getByUser(currentUser()['id'], $order);
+$tickets = $ticketRepo->getByUser($order, currentUser()['id']);
 
 
 ?>
